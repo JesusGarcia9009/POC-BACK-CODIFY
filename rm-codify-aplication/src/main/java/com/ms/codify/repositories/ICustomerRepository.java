@@ -1,6 +1,3 @@
-// Copyright (c) Philipp Wagner. All rights reserved.
-// Licensed under the MIT license. See LICENSE file in the project root for full license information.
-
 package com.ms.codify.repositories;
 
 import org.springframework.data.jpa.repository.Query;
@@ -12,6 +9,13 @@ import com.ms.codify.entities.Customer;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
+/**
+ * ICustomerRepository (operaciones CRUD de la entidad) - Spring Boot
+ *
+ * @author Jesus Garcia
+ * @since 1.0
+ * @version jdk-11
+ */
 public interface ICustomerRepository extends CrudRepository<Customer, Long> {
 
     @Async

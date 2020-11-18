@@ -1,5 +1,3 @@
-// Copyright (c) Philipp Wagner. All rights reserved.
-// Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 package com.ms.codify.config;
 
@@ -16,6 +14,13 @@ import java.util.*;
 import java.util.concurrent.ConcurrentMap;
 import java.util.stream.Collectors;
 
+/**
+ * Multithread Configuration set vars - Spring Boot
+ *
+ * @author Jesus Garcia
+ * @since 1.0
+ * @version jdk-11
+ */
 public class DynamicTenantAwareRoutingSource extends AbstractRoutingDataSource {
 
     private final String filename;

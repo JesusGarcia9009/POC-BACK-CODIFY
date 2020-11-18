@@ -1,10 +1,15 @@
-// Copyright (c) Philipp Wagner. All rights reserved.
-// Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 package com.ms.codify.config;
 
 import org.springframework.jdbc.datasource.lookup.AbstractRoutingDataSource;
 
+/**
+ * Routing by tenant - Spring Boot
+ *
+ * @author Jesus Garcia
+ * @since 1.0
+ * @version jdk-11
+ */
 public class TenantAwareRoutingSource extends AbstractRoutingDataSource {
 
     @Override

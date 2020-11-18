@@ -1,10 +1,14 @@
-// Copyright (c) Philipp Wagner. All rights reserved.
-// Licensed under the MIT license. See LICENSE file in the project root for full license information.
-
 package com.ms.codify.entities;
 
 import javax.persistence.*;
 
+/**
+ * Customer (entidad mapeada de la tabla de la base de datos) - Spring Boot
+ *
+ * @author Jesus Garcia
+ * @since 1.0
+ * @version jdk-11
+ */
 @Entity
 @Table(name = "customer")
 public class Customer {

@@ -1,6 +1,3 @@
-// Copyright (c) Philipp Wagner. All rights reserved.
-// Licensed under the MIT license. See LICENSE file in the project root for full license information.
-
 package com.ms.codify.controllers;
 
 import java.util.List;
@@ -19,6 +16,13 @@ import com.ms.codify.dto.CustomerDto;
 import com.ms.codify.entities.Customer;
 import com.ms.codify.repositories.ICustomerRepository;
 
+/**
+ * CustomerController (Capa rest) - Spring Boot
+ *
+ * @author Jesus Garcia
+ * @since 1.0
+ * @version jdk-11
+ */
 @RestController
 public class CustomerController {
 
