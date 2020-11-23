@@ -1,9 +1,13 @@
 package com.ms.codify.controller;
 
+import javax.validation.Valid;
+
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import com.ms.codify.dto.LoginRequestDto;
 import com.ms.codify.dto.LoginResponseDto;
+import com.ms.codify.dto.RegistrarRequestDto;
 import com.ms.codify.exception.UserNotAuthException;
 
 import io.swagger.annotations.Api;
@@ -20,7 +24,7 @@ import io.swagger.annotations.ApiResponses;
  * @version jdk-11
  */
 @Api(value = "Microservicio de Login", description = "Esta API tiene los servicios referentes a operaciones de autentificacion")
-public interface LoginUserController {
+public interface UsuarioController {
 
 
 	/**
@@ -36,5 +40,7 @@ public interface LoginUserController {
 	public ResponseEntity<LoginResponseDto> autenticacionUsuario(LoginRequestDto dto)throws UserNotAuthException ;
 	
 	
+	
+	public ResponseEntity<?> registrarUsuario(@Valid @RequestBody RegistrarRequestDto dto);
 	
 }

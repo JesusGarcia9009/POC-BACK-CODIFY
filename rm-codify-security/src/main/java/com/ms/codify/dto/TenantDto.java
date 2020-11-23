@@ -9,7 +9,7 @@ import lombok.Setter;
 import lombok.ToString;
 
 /**
- * LoginResponseDto - Response - Spring Boot
+ * PerfilesDto - Response - Spring Boot
  *
  * @author Jesus Garcia
  * @version jdk-11
@@ -19,18 +19,15 @@ import lombok.ToString;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
-public class LoginResponseDto {
+public class TenantDto {
 	
 	@JsonProperty
-	private Long id;
-	
+	public Long idTenant;
+
 	@JsonProperty
-	private String email;
-	
+	public String nombre;
+
 	@JsonProperty
-	private String fullName;
-	
-	@JsonProperty
-	private String token;
+	public String llave;
 
 }

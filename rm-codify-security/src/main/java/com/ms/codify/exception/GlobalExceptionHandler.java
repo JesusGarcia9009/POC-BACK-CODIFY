@@ -38,17 +38,21 @@ public class GlobalExceptionHandler {
 	 * @param request The current request
 	 */
 	@Nullable
-	@ExceptionHandler({ UserNotFoundException.class, ContentNotAllowedException.class, MethodArgumentNotValidException.class})
+	@ExceptionHandler({ UserNotFoundException.class, ContentNotAllowedException.class, MethodArgumentNotValidException.class, DataNotFoundException.class})
 	public final ResponseEntity<ApiError> handleException(Exception ex, WebRequest request) {
 		log.error("Manejo " + ex.getClass().getSimpleName() + " debido a " + ex.getMessage());
 		HttpHeaders headers = new HttpHeaders();
 
 		if (ex instanceof UserNotFoundException) {
-			HttpStatus status = HttpStatus.NO_CONTENT;
+			HttpStatus status = HttpStatus.UNAUTHORIZED;
 			UserNotFoundException unfe = (UserNotFoundException) ex;
 			return handleCommonException(unfe, headers, status, request);
 
-		}  else if (ex instanceof ContentNotAllowedException) {
+		} else if (ex instanceof DataNotFoundException) {
+			HttpStatus status = HttpStatus.NOT_FOUND;
+			DataNotFoundException unfe = (DataNotFoundException) ex;
+			return handleDataNotFoundException(unfe, headers, status, request);
+		} else if (ex instanceof ContentNotAllowedException) {
 			HttpStatus status = HttpStatus.BAD_REQUEST;
 			ContentNotAllowedException cnae = (ContentNotAllowedException) ex;
 			return handleContentNotAllowedException(cnae, headers, status, request);
@@ -189,5 +193,24 @@ public class GlobalExceptionHandler {
 			request.setAttribute(WebUtils.ERROR_EXCEPTION_ATTRIBUTE, ex, WebRequest.SCOPE_REQUEST);
 		}
 		return new ResponseEntity<>(body, headers, status);
+	}
+	
+	
+	/**
+	 * Personalizar la respuesta DataNotFoundException.
+	 *
+	 * @param ex      The exception
+	 * @param headers The headers to be written to the response
+	 * @param status  The selected response status
+	 * @return a {@code ResponseEntity} instance
+	 */
+	protected ResponseEntity<ApiError> handleDataNotFoundException(DataNotFoundException ex,
+			HttpHeaders headers, HttpStatus status, WebRequest request) {
+		List<String> errorMessages = new ArrayList<>();
+		errorMessages.add(ex.getMessage());
+		log.error("[handleContentNotAllowedException]HttpHeaders --> " + headers.toString());
+		log.error("[handleContentNotAllowedException]HttpStatus --> " + status.toString());
+		log.error("[handleContentNotAllowedException]error --> " + ex.getLocalizedMessage(), ex);
+		return handleExceptionInternal(ex, new ApiError(status, errorMessages), headers, status, request);
 	}
 }

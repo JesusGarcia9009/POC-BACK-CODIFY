@@ -3,17 +3,17 @@ package com.ms.codify.repository;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import com.ms.codify.entities.UsuarioModel;
+import com.ms.codify.entities.Usuario;
 
 /**
  * @description The Interface CobPagareRepository.
  * @author BS2
  */
 @Repository
-public interface UsuarioRepository extends JpaRepository<UsuarioModel, Long> {
+public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
 	
-	UsuarioModel findByRutOrUsuario(String rut, String username);
+	Usuario findByRutOrEmail(String rut, String email);
 	
-	Long countByRutOrUsuario(String rut, String username);
+	Long countByRutOrEmail(String rut, String email);
 	
 }

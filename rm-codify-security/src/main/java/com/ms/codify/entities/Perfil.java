@@ -4,13 +4,18 @@
 package com.ms.codify.entities;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
@@ -23,10 +28,10 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "perfil")
-public class PerfilModel {
+public class Perfil {
     
 	@Id
-    @GeneratedValue
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_perfil", nullable = false)
     private Long idPerfil;
  
@@ -36,17 +41,18 @@ public class PerfilModel {
     @Column(name = "descripcion", length = 200, nullable = false)
     private String descripcion;
     
-    @OneToMany(mappedBy = "perfilModel",cascade = CascadeType.ALL)
-    private List<UsuarioPerfilModel> usuarioPerfilList = new ArrayList<>();
-
-	public PerfilModel(Long idPerfil, String nombre, String descripcion) {
-		super();
-		this.idPerfil = idPerfil;
-		this.nombre = nombre;
-		this.descripcion = descripcion;
-	}
-
-	public PerfilModel() {
+    @OneToMany(mappedBy = "perfil",cascade = CascadeType.ALL)
+    private List<PerfilFuncionalidad> perfilFuncionalidadList = new ArrayList<>();
+    
+    @ManyToMany(fetch = FetchType.LAZY,
+            cascade = {
+                CascadeType.PERSIST,
+                CascadeType.MERGE
+            },
+            mappedBy = "perfil")
+    private Set<Usuario> usuario = new HashSet<>();
+    
+	public Perfil() {
 		super();
 	}
 
@@ -73,21 +79,21 @@ public class PerfilModel {
 	public void setDescripcion(String descripcion) {
 		this.descripcion = descripcion;
 	}
-	
-	public List<UsuarioPerfilModel> getUsuarioPerfilList() {
-		return usuarioPerfilList;
+
+	public Set<Usuario> getUsuario() {
+		return usuario;
 	}
 
-	public void setUsuarioPerfilList(List<UsuarioPerfilModel> usuarioPerfilList) {
-		this.usuarioPerfilList = usuarioPerfilList;
+	public void setUsuario(Set<Usuario> usuario) {
+		this.usuario = usuario;
 	}
 
-	@Override
-	public String toString() {
-		return "PerfilModel [idPerfil=" + idPerfil + ", nombre=" + nombre + ", descripcion=" + descripcion + "]";
+	public List<PerfilFuncionalidad> getPerfilFuncionalidadList() {
+		return perfilFuncionalidadList;
 	}
-    
-    
- 
-    
+
+	public void setPerfilFuncionalidadList(List<PerfilFuncionalidad> perfilFuncionalidadList) {
+		this.perfilFuncionalidadList = perfilFuncionalidadList;
+	}
+
 }

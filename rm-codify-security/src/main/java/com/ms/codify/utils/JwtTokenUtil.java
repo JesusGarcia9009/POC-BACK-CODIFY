@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 
 import com.ms.codify.config.JwtTokenProvider;
 import com.ms.codify.dto.CodifyUserDto;
-import com.ms.codify.entities.UsuarioModel;
+import com.ms.codify.entities.Usuario;
 import com.ms.codify.exception.UserNotAuthException;
 
 import lombok.extern.slf4j.Slf4j;
@@ -59,7 +59,7 @@ public class JwtTokenUtil {
 	 * @param usuario
 	 * @return
 	 */
-	public String refreshToken(UsuarioModel usuario) throws UserNotAuthException {
+	public String refreshToken(Usuario usuario) throws UserNotAuthException {
 		log.info("[refreshToken] :: Inicio del metodo ");
 		String jwt ="";
 		try {
@@ -69,7 +69,7 @@ public class JwtTokenUtil {
 			CodifyUserDto codifyUser = (CodifyUserDto) authentication.getPrincipal();
 
 			// Actualizamos los datos
-			codifyUser.setUsername(usuario.getUsuario());
+			codifyUser.setUsername(usuario.getEmail());
 			codifyUser.setFullName(usuario.getNombre() + " " + usuario.getApellidoPaterno() + " " + usuario.getApellidoMaterno());
 			codifyUser.setRut(usuario.getRut());
 

@@ -1,6 +1,5 @@
 package com.ms.codify.dto;
 
-import java.math.BigDecimal;
 import java.util.Collection;
 import java.util.List;
 
@@ -36,15 +35,17 @@ public class CodifyUserDto implements UserDetails {
 
 	private String fullName;
 	
-	private String username;
-	
 	private String rut;
+	
+	private String email;
+	
+	private String idTenant;
+	
+	private String username;
 	
 	private String password;
 	
-	private BigDecimal idTenant;
-	
-	private List<ProfileDto> listProfiles;
+	private List<FuncionalidadDto> funcionalidades;
 	
     private Collection<? extends GrantedAuthority> authorities;
     

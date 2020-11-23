@@ -1,6 +1,7 @@
 package com.ms.codify.service;
 
-import com.ms.codify.entities.UsuarioModel;
+import com.ms.codify.dto.RegistrarRequestDto;
+import com.ms.codify.entities.Usuario;
 
 
 /**
@@ -10,7 +11,7 @@ import com.ms.codify.entities.UsuarioModel;
  * @version 1.0 Creacion
  * @since Java 11
  */
-public interface UsersService {
+public interface UsuarioService {
 
 	
 	/**
@@ -19,7 +20,7 @@ public interface UsersService {
 	 * @param dto
 	 * @return
 	 */
-	public UsuarioModel buscarUsers(Long id); 
+	public Usuario buscarUsers(Long id); 
 	
 	/**
 	 * Obtiene el el modelo by username o rut
@@ -27,7 +28,7 @@ public interface UsersService {
 	 * @param string userNameOrRut
 	 * @return model @see UsersModel
 	 */
-	public UsuarioModel buscarUserByNameOrRut(String userNameOrRut); 
+	public Usuario buscarUsuarioByEmailOrRut(String emailOrRut); 
 	
 	/**
 	 * Cuenta que exista el usuario por rut o urname
@@ -35,5 +36,13 @@ public interface UsersService {
 	 * @param string userNameOrRut
 	 * @return model @see UsersModel
 	 */
-	public Long countUserByNameOrRut(String userNameOrRut) ;
+	public Long countUsuarioByEmailOrRut(String emailOrRut) ;
+	
+	/**
+	 * Registrar Usuario en la plataforma
+	 * 
+	 * @param string userNameOrRut
+	 * @return model @see UsersModel
+	 */
+	public boolean registrarUsuario(RegistrarRequestDto dto);
 }

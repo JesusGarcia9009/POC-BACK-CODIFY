@@ -15,7 +15,7 @@ import org.springframework.stereotype.Component;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ms.codify.dto.CodifyUserDto;
-import com.ms.codify.dto.ProfileDto;
+import com.ms.codify.dto.FuncionalidadDto;
 import com.ms.codify.enums.KeyClaimsTokenEnum;
 
 import io.jsonwebtoken.Claims;
@@ -65,11 +65,12 @@ public class JwtTokenProvider {
 		Claims claims = Jwts.claims();
 
 		claims.put(KeyClaimsTokenEnum.AUTHORITIES.getDescripcion(), mapper.writeValueAsString(permisos));
-		claims.put(KeyClaimsTokenEnum.ROLES.getDescripcion(), mapper.writeValueAsString(userPrincipal.getListProfiles()));
 		claims.put(KeyClaimsTokenEnum.ID_USUARIO.getDescripcion(), userPrincipal.getIdUsuario());
 		claims.put(KeyClaimsTokenEnum.FULL_NAME.getDescripcion(), userPrincipal.getFullName());
 		claims.put(KeyClaimsTokenEnum.USERNAME.getDescripcion(), userPrincipal.getUsername());
 		claims.put(KeyClaimsTokenEnum.RUT.getDescripcion(), userPrincipal.getRut());
+		claims.put(KeyClaimsTokenEnum.TENANT.getDescripcion(), userPrincipal.getIdTenant());
+		claims.put(KeyClaimsTokenEnum.FUNCIONALIDADES.getDescripcion(), userPrincipal.getFuncionalidades());
 		Date expiryDate = new Date(System.currentTimeMillis() + currentMillis);
 		return Jwts.builder().setClaims(claims).setSubject(userPrincipal.getIdUsuario().toString())
 				.setIssuedAt(new Date()).setExpiration(expiryDate).signWith(SignatureAlgorithm.HS512, jwtSecret)
@@ -89,11 +90,12 @@ public class JwtTokenProvider {
 		Claims claims = getClaims(token);
 		CodifyUserDto codifyUser = new CodifyUserDto();
 		codifyUser.setAuthorities(getPermisos(token));
-		codifyUser.setListProfiles(getRoles(token));
 		codifyUser.setIdUsuario(getUserIdFromJWT(token));
 		codifyUser.setFullName(findKeyClaimsInData(KeyClaimsTokenEnum.FULL_NAME, claims));
 		codifyUser.setUsername(findKeyClaimsInData(KeyClaimsTokenEnum.USERNAME, claims));
 		codifyUser.setRut(findKeyClaimsInData(KeyClaimsTokenEnum.RUT, claims));
+		codifyUser.setIdTenant(findKeyClaimsInData(KeyClaimsTokenEnum.TENANT, claims));
+		codifyUser.setFuncionalidades(getFuncionalidadDtos(token));
 
 		return codifyUser;
 	}
@@ -182,18 +184,20 @@ public class JwtTokenProvider {
 		return authorities;
 	}
 
-	public List<ProfileDto> getRoles(String token) throws IOException {
-		String roles = getDataByKeyClaims(KeyClaimsTokenEnum.ROLES, token);
-		List<ProfileDto> listado = new ArrayList<>();
-
-		if(roles != null && !roles.equals("null")) {
-			listado = Arrays.asList(new ObjectMapper().readValue(roles.toString().getBytes(), ProfileDto[].class));
-		}
-
-		return listado;
+	/**
+	 * getFuncionalidadDtos - JwtTokenProvider - Spring Boot
+	 *
+	 * @author Jesus Garcia
+	 * @since 1.0
+	 * @version jdk-11
+	 * @param token  - token del usuario, extraer caracteristica de funcionalidades
+	 * @return Listado - Listado de funcionalidades (List<FuncionalidadDto>)
+	 */
+	@SuppressWarnings("unchecked")
+	public List<FuncionalidadDto> getFuncionalidadDtos(String token) throws IOException {
+		Claims claims = getClaims(token);
+		List<FuncionalidadDto> funcionalidades = claims.get(KeyClaimsTokenEnum.FUNCIONALIDADES.getDescripcion(), ArrayList.class);
+		return funcionalidades;
 	}
-
-	
-	
 	
 }

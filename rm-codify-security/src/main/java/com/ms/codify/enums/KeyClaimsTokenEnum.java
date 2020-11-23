@@ -13,10 +13,9 @@ public enum KeyClaimsTokenEnum {
 	FULL_NAME("fullName"),
 	USERNAME("username"),
 	AUTHORITIES("authorities"),
-	ROLES("roles"),
 	RUT("rut"),
-	PERFILES("perfiles"),
-	APLICACIONES("aplicaciones");
+	FUNCIONALIDADES("funcionalidades"),
+	TENANT("idTenant");
 	
 	private String descripcion;
 	

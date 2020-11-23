@@ -1,7 +1,7 @@
 package com.ms.codify.service;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,9 +12,9 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import com.ms.codify.dto.CodifyUserDto;
-import com.ms.codify.dto.ProfileDto;
-import com.ms.codify.entities.PerfilModel;
-import com.ms.codify.entities.UsuarioModel;
+import com.ms.codify.entities.Perfil;
+import com.ms.codify.entities.Usuario;
+import com.ms.codify.repository.PerfilFuncionalidadRepository;
 import com.ms.codify.repository.PerfilRepository;
 
 import lombok.extern.slf4j.Slf4j;
@@ -31,17 +31,20 @@ import lombok.extern.slf4j.Slf4j;
 public class CustomUserDetailsService implements UserDetailsService {
 
 	@Autowired
-	private UsersService usersService;
+	private UsuarioService usersService;
 
 	@Autowired
 	private PerfilRepository profile;
-
+	
+	@Autowired
+	private PerfilFuncionalidadRepository funcionalidad;
+	
 	@Override
-	public CodifyUserDto loadUserByUsername(String usernameOrEmail) throws UsernameNotFoundException {
+	public CodifyUserDto loadUserByUsername(String emailOrRut) throws UsernameNotFoundException {
 		log.info("[loadUserByUsername]::inicio de metodo");
-		UsuarioModel user = null;
+		Usuario user = null;
 
-		user = usersService.buscarUserByNameOrRut(usernameOrEmail);
+		user = usersService.buscarUsuarioByEmailOrRut(emailOrRut);
 
 		if (user == null) {
 			throw new UsernameNotFoundException("Usuario no encontrado");
@@ -58,42 +61,29 @@ public class CustomUserDetailsService implements UserDetailsService {
 	 * @param usuarioDTO
 	 * @return
 	 */
-	private CodifyUserDto createUserCodify(UsuarioModel userDto) {
+	private CodifyUserDto createUserCodify(Usuario usuarioModel) {
 		log.info("[createUserCodify]::inicio de metodo");
 		CodifyUserDto codifyUser = new CodifyUserDto();
 
-		codifyUser.setIdUsuario(userDto.getIdUsuario());
-		codifyUser.setFullName(userDto.getNombre() + " " + userDto.getApellidoPaterno());
-		codifyUser.setUsername(userDto.getUsuario());
-		codifyUser.setRut(userDto.getRut());
-		codifyUser.setPassword(userDto.getPass());
+		codifyUser.setIdUsuario(usuarioModel.getIdUsuario());
+		codifyUser.setFullName(usuarioModel.getNombre() + " " + usuarioModel.getApellidoPaterno());
+		codifyUser.setUsername(usuarioModel.getEmail());
+		codifyUser.setRut(usuarioModel.getRut());
+		codifyUser.setPassword(usuarioModel.getPass());
+		codifyUser.setEmail(usuarioModel.getEmail());
+		codifyUser.setIdTenant(usuarioModel.getTenant().getLlave());
 
-		List<ProfileDto> rolList = getRolList(userDto.getIdUsuario());
-		codifyUser.setListProfiles(rolList);
+		Set<Perfil> list = profile.findPerfilesByUserId(usuarioModel.getIdUsuario());
+		codifyUser.setFuncionalidades(funcionalidad.findFuncionalidadesByPerfiles(list));
 
-		if (!rolList.isEmpty()) {
-			List<GrantedAuthority> authorities = rolList.stream()
-					.map(permiso -> new SimpleGrantedAuthority(permiso.getDscProfile())).collect(Collectors.toList());
+		if (!list.isEmpty()) {
+			List<GrantedAuthority> authorities = list.stream()
+					.map(permiso -> new SimpleGrantedAuthority(permiso.getNombre())).collect(Collectors.toList());
 			codifyUser.setAuthorities(authorities);
 		}
 
 		log.info("[createUserCodify]::fin de metodo");
 		return codifyUser;
-	}
-
-	private List<ProfileDto> getRolList(Long idUsuario) {
-		log.info("[createUserCodify:RolList]::inicio de metodo");
-		List<ProfileDto> rolList = new ArrayList<>();
-		// Roles
-		List<PerfilModel> list = profile.findbyIdUsuario(idUsuario);
-		for (PerfilModel rol : list) {
-			ProfileDto r = new ProfileDto();
-			r.setIdProfile(rol.getIdPerfil());
-			r.setDscProfile(rol.getNombre());
-			rolList.add(r);
-		}
-		log.info("[createUserCodify:RolList]::fin de metodo");
-		return rolList;
 	}
 
 }

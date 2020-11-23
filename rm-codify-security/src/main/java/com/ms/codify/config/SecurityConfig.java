@@ -70,8 +70,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		        .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
 		        .and()
 				.authorizeRequests()
-				.antMatchers(HttpMethod.POST, "/api/codify/login/auth").permitAll()
-				.antMatchers("/configuration/security", "/webjars/**").permitAll().anyRequest().authenticated();
+				.antMatchers(HttpMethod.POST, "/api/codify/login").permitAll()
+				.antMatchers("/", "/favicon.ico", "/**/*.png", "/**/*.gif", "/**/*.svg", "/**/*.jpg", "/**/*.html",
+						"/**/*.css", "/**/*.js").permitAll()
+				.antMatchers("/v2/api-docs", 
+							 "/configuration/ui", 
+							 "/swagger-resources/**",
+							 "/configuration/security", 
+							 "/swagger-ui.html",
+							 "/webjars/**").permitAll().anyRequest().authenticated();
 		
 		http.addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
 	}
